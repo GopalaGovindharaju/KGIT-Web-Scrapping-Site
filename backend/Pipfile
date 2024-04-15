@@ -10,6 +10,8 @@ django-cors-headers = "*"
 pymongo = "*"
 django-mongodb-engine = "*"
 djongo = "*"
+social-auth-app-django = "*"
+django-allauth = "*"
 
 [dev-packages]
 
