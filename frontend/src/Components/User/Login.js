@@ -1,5 +1,4 @@
 import React, { useState } from 'react'
-import 'D:/KGIT-Web-Scrapping-Site/frontend/src/App.css'
 import { Box, Flex, Button, Input, Text, Image, InputGroup, InputLeftElement, InputRightElement, Tooltip} from '@chakra-ui/react'
 import { FormControl, FormLabel } from '@chakra-ui/react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -7,7 +6,8 @@ import { faArrowRight, faEnvelope, faLock } from '@fortawesome/free-solid-svg-ic
 import { faGoogle, faLinkedin } from '@fortawesome/free-brands-svg-icons';
 import { Link } from 'react-router-dom'
 import Signup from '../Signup.png'
-import axios from 'axios'
+import axios from 'axios';
+import { useGoogleLogin } from '@react-oauth/google'
 
 function Login() {
   const [newUserEmail, setNewUserEmail] = useState('')
@@ -51,6 +51,25 @@ function Login() {
       console.log(error)
     })
   }
+
+  const login = useGoogleLogin({
+    redirectUrl: 'https://www.googleapis.com/oauth2/v3/userinfo',
+    onSuccess: async (response) => {
+      try {
+          const res = await axios.get("https://www.googleapis.com/oauth2/v3/userinfo", 
+        {
+          headers: {
+            Authorization: `Bearer ${response.access_token}`,
+          },
+        });
+        console.log(res);
+      }
+      catch (err) {
+        console.log(err);
+      }
+    },
+    onError : err => console.log(err)
+  });
  
   return (
     <>
@@ -129,7 +148,7 @@ function Login() {
               mb='2%'
             >
               <Tooltip label='Google' placement='bottom-start'>
-                <FontAwesomeIcon icon={faGoogle} size='2x'/>
+                <FontAwesomeIcon icon={faGoogle} size='2x'onClick={() => login()}/>
               </Tooltip>
               <Tooltip label='LinkedIn' placement='bottom-start'>
                 <FontAwesomeIcon icon={faLinkedin} size='2x'/>
