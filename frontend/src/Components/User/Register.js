@@ -10,7 +10,7 @@ import Signup from '../Signup.png';
 function Register() {
   const [show, setShow] = useState(false);
   const [newUserEmail, setNewUserEmail] = useState('')
-  const [newCompanyName, setNewCompanyName] = useState('')
+  const [newUserName, setNewUserName] = useState('')
   const [newPassword, setNewPassword] = useState('')
   const [newConfirmPassword, setNewConfirmPassword] = useState('')
 
@@ -27,8 +27,8 @@ function Register() {
     setNewUserEmail(e.target.value);
   }
 
-  const handleCompanyNameChange = (e) => {
-    setNewCompanyName(e.target.value);
+  const handleUserNameChange = (e) => {
+    setNewUserName(e.target.value);
   }
 
   const handlePasswordChange = (e) => {
@@ -44,9 +44,8 @@ function Register() {
     if (newPassword === newConfirmPassword){
       const data = {
         email: newUserEmail,
-        companyname: newCompanyName,
+        username: newUserName,
         password: newPassword,
-        confirmpassword: newConfirmPassword,
       }
 
       axios.post('http://127.0.0.1:8000/api/signup/', data)
@@ -90,7 +89,7 @@ function Register() {
                 <InputLeftElement pointerEvents='none'>
                   <FontAwesomeIcon icon={faBuilding} color='gray.300' />
                 </InputLeftElement>
-                <Input type='text' name='companyName' placeholder='Company Name' value={newCompanyName} onChange={handleCompanyNameChange} />
+                <Input type='text' name='userName' placeholder='User Name' value={newUserName} onChange={handleUserNameChange} />
               </InputGroup>
             </FormControl>
             <FormControl isRequired mb="10px">

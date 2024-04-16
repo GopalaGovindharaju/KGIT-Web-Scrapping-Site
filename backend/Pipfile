@@ -12,6 +12,7 @@ django-mongodb-engine = "*"
 djongo = "*"
 social-auth-app-django = "*"
 django-allauth = "*"
+pyjwt = "*"
 
 [dev-packages]
 

@@ -3,9 +3,9 @@ from django.contrib.auth.hashers import make_password, check_password
 
 class SignUpTable(models.Model):
     Email = models.EmailField(primary_key=True, max_length=254, unique=True)
-    CompanyName = models.CharField(max_length=100)
-    Password = models.CharField(max_length=128)
-    ConfirmPassword = models.CharField(max_length=128)
+    User_Name = models.CharField(max_length=100)
+    Password = models.CharField(max_length=128, null=True)
+    
 
     def __str__(self):
         return self.Email

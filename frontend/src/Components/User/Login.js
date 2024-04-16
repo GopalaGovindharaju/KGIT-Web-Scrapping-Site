@@ -1,13 +1,13 @@
 import React, { useState } from 'react'
-import { Box, Flex, Button, Input, Text, Image, InputGroup, InputLeftElement, InputRightElement, Tooltip} from '@chakra-ui/react'
+import { Box, Flex, Button, Input, Text, Image, InputGroup, InputLeftElement, InputRightElement} from '@chakra-ui/react'
 import { FormControl, FormLabel } from '@chakra-ui/react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faArrowRight, faEnvelope, faLock } from '@fortawesome/free-solid-svg-icons'
-import { faGoogle, faLinkedin } from '@fortawesome/free-brands-svg-icons';
 import { Link } from 'react-router-dom'
 import Signup from '../Signup.png'
 import axios from 'axios';
-import { useGoogleLogin } from '@react-oauth/google'
+import { GoogleLogin } from '@react-oauth/google'
+import { jwtDecode } from "jwt-decode";
 
 function Login() {
   const [newUserEmail, setNewUserEmail] = useState('')
@@ -15,6 +15,29 @@ function Login() {
 
   const [show, setShow] = React.useState(false)
   const handleClick = () => setShow(!show)
+
+  const onSuccess = async (res) => {
+    console.log('success:', jwtDecode(res.credential));
+    var detail = jwtDecode(res.credential)
+    const data = {
+      username: detail.name,
+      email: detail.email
+    }
+    console.log(data);
+    axios.post('http://127.0.0.1:8000/api/google/', data)
+    .then((response) => {
+      console.log(response.data)
+    })
+    .catch((error) => {
+      console.log(error)
+    })
+    
+  }
+
+  const onFailure = (err) => {
+    console.log('failed:', err);
+  };
+
 
   const text_css = {
     fontFamily:'var(--chakra-fonts-body)',
@@ -31,7 +54,7 @@ function Login() {
     setNewPassword(e.target.value);
   }
 
-  const handleLogin = async (e) => {
+  const handleLogin = (e) => {
     e.preventDefault();
     const data = {
       email: newUserEmail,
@@ -48,28 +71,9 @@ function Login() {
       }
     })
     .catch((error) => {
-      console.log(error)
+      console.log(error.response.data)
     })
   }
-
-  const login = useGoogleLogin({
-    redirectUrl: 'https://www.googleapis.com/oauth2/v3/userinfo',
-    onSuccess: async (response) => {
-      try {
-          const res = await axios.get("https://www.googleapis.com/oauth2/v3/userinfo", 
-        {
-          headers: {
-            Authorization: `Bearer ${response.access_token}`,
-          },
-        });
-        console.log(res);
-      }
-      catch (err) {
-        console.log(err);
-      }
-    },
-    onError : err => console.log(err)
-  });
  
   return (
     <>
@@ -147,12 +151,19 @@ function Login() {
               gap={8} 
               mb='2%'
             >
-              <Tooltip label='Google' placement='bottom-start'>
+              <GoogleLogin
+            buttonText="Sign in with Google"
+            onSuccess={onSuccess}
+            onFailure={onFailure}
+            cookiePolicy={'single_host_origin'}
+            
+        />
+              {/*<Tooltip label='Google' placement='bottom-start'>
                 <FontAwesomeIcon icon={faGoogle} size='2x'onClick={() => login()}/>
               </Tooltip>
               <Tooltip label='LinkedIn' placement='bottom-start'>
                 <FontAwesomeIcon icon={faLinkedin} size='2x'/>
-              </Tooltip>
+  </Tooltip>*/}
             </Box>
             
             <hr></hr>

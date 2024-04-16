@@ -6,25 +6,22 @@ from rest_framework.decorators import api_view
 from django.contrib.auth import authenticate, login
 from .models import SignUpTable
 
+
 @api_view(['POST'])
 def create_user(request):
     if request.method == 'POST':
         data = request.data
 
         email = data.get('email')
-        companyname = data.get('companyname')
+        username = data.get('username')
         password = data.get('password')
-        confirm_password = data.get('confirmpassword')
-
-        if password != confirm_password:
-            return Response({'error': 'Password and confirm password do not match'}, status=status.HTTP_400_BAD_REQUEST)
 
         # Check if user already exists
         if SignUpTable.objects.filter(Email=email).exists():
             return Response({'error': 'User with this email already exists'}, status=status.HTTP_400_BAD_REQUEST)
 
         # Create new user
-        user = SignUpTable.objects.create(Email=email, CompanyName=companyname)
+        user = SignUpTable.objects.create(Email=email, User_Name=username)
         user.set_password(password)
         user.save()
 
@@ -37,18 +34,36 @@ def verify_user(request):
 
         email = data.get('email')
         password = data.get('password')
-        print(email)
-        print(password)
 
         # Authenticate user
-        user = authenticate( request, username= email, password= password)
-        print(user)
-
-        # Check authentication result
-        if user is not None:
-            # Login user
-            print('user is validated')
-            login(request, user)
-            return Response({'message': 'Login successful'}, status=status.HTTP_200_OK)
+        if SignUpTable.objects.filter(Email=email).exists():
+            user = SignUpTable.objects.get(Email=email)
+            # Check authentication result
+            if user is not None and user.check_password(password):
+                # Login user
+                print('user is validated')
+                return Response({'message': user.User_Name}, status=status.HTTP_200_OK)
+            else:
+                return Response("incorrect password")
         else:
             return Response({'error': 'Invalid email or password'}, status=status.HTTP_401_UNAUTHORIZED)
+
+@api_view(['POST'])
+def google_user(request):
+    if request.method == 'POST':
+        data = request.data
+
+        username = data.get('username')
+        email = data.get('email')
+        
+        
+        if SignUpTable.objects.filter(Email=email).exists():
+            return Response({'message': "User Found"}, status=status.HTTP_200_OK)
+        else:
+            user = SignUpTable(Email=email,User_Name=username)
+            user.save()
+            return Response({'message': "User Created"}, status=status.HTTP_200_OK)
+
+    else:
+        return Response({'error': 'Invalid request'}, status=status.HTTP_401_UNAUTHORIZED)
+
