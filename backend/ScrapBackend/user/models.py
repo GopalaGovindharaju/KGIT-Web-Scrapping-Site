@@ -5,6 +5,7 @@ class SignUpTable(models.Model):
     Email = models.EmailField(primary_key=True, max_length=254, unique=True)
     User_Name = models.CharField(max_length=100)
     Password = models.CharField(max_length=128, null=True)
+    is_active = models.BooleanField(default=False)
     
 
     def __str__(self):

@@ -3,15 +3,18 @@ import { Box, Flex, Button, Input, Text, Image, InputGroup, InputLeftElement, In
 import { FormControl, FormLabel } from '@chakra-ui/react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faArrowRight, faEnvelope, faLock } from '@fortawesome/free-solid-svg-icons'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import Signup from '../Signup.png'
 import axios from 'axios';
 import { GoogleLogin } from '@react-oauth/google'
 import { jwtDecode } from "jwt-decode";
+import { useUser } from '../../context/userContext'
 
 function Login() {
+  const {setUser} = useUser();
   const [newUserEmail, setNewUserEmail] = useState('')
   const [newPassword, setNewPassword] = useState('')
+  const navigate = useNavigate(); 
 
   const [show, setShow] = React.useState(false)
   const handleClick = () => setShow(!show)
@@ -27,6 +30,8 @@ function Login() {
     axios.post('http://127.0.0.1:8000/api/google/', data)
     .then((response) => {
       console.log(response.data)
+      setUser(data);
+      navigate('/home');
     })
     .catch((error) => {
       console.log(error)
@@ -68,10 +73,16 @@ function Login() {
       }
       else{
         console.log(response.data);
+        setUser(response.data);
+        setNewUserEmail('');
+        setNewPassword('');
+        navigate('/home');
       }
     })
     .catch((error) => {
-      console.log(error.response.data)
+      alert(error.response.data.error);
+      setNewUserEmail('');
+      setNewPassword('');
     })
   }
  

@@ -4,7 +4,7 @@ import { Box, Flex, Button, Input, Text, Image, InputGroup, InputLeftElement, In
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowRight, faBuilding, faEnvelope, faLock } from '@fortawesome/free-solid-svg-icons';
 import { faGoogle, faLinkedin } from '@fortawesome/free-brands-svg-icons';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import Signup from '../Signup.png';
 
 function Register() {
@@ -13,6 +13,8 @@ function Register() {
   const [newUserName, setNewUserName] = useState('')
   const [newPassword, setNewPassword] = useState('')
   const [newConfirmPassword, setNewConfirmPassword] = useState('')
+
+  const navigate = useNavigate();
 
   const text_css = {
     fontFamily:'var(--chakra-fonts-body)',
@@ -51,15 +53,15 @@ function Register() {
       axios.post('http://127.0.0.1:8000/api/signup/', data)
       .then((response) => {
         console.log("SignUped!")
-        console.log(response)
-        if (!response.data){
-          alert("User Can't Found or not Registered");
-        } else{
-          console.log(response.data)
-        }
+        console.log(response.data);
+        navigate('/login')
       })
       .catch((error) => {
-        console.log(error)
+        console.log(error);
+        alert(error.response.data.error);
+        setNewUserEmail('');
+        setNewPassword('');
+        navigate('/login')
       })
     }
     else{
