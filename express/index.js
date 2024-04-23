@@ -10,10 +10,9 @@ puppeteer.use(StealthPlugin());
 
 const app = express();
 
-async function scrapeData(){
+async function scrapeData(companyName){
 
   try {
-    const companyName = 'Quess'
     const browser = await puppeteer.launch({ headless: false });
     const page = await browser.newPage();
   
@@ -205,7 +204,7 @@ async function scrapeData(){
   
     // Close the browser
     await browser.close();
-  
+    return "AmbitionBox-overalldata.xlsx";
     
   } catch (error) {
     console.error("An error occurred:", error);
@@ -217,10 +216,13 @@ async function scrapeData(){
 app.get('/download-excel', async (req, res) => {
   const companyName = req.query.companyName;
 
+  if (!companyName) {
+    return res.status(400).send('Company name is required');
+}
 
   try {
       // Call the scrapeData function
-      const filePath = await scrapeData();
+      const filePath = await scrapeData(companyName);
       
       // Send the Excel file as a response
       res.download(filePath);
