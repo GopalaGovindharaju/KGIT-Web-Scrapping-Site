@@ -5,7 +5,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowRight, faBuilding, faEnvelope, faLock } from '@fortawesome/free-solid-svg-icons';
 import { faGoogle, faLinkedin } from '@fortawesome/free-brands-svg-icons';
 import { Link, useNavigate } from 'react-router-dom';
-import Signup from '../Signup.png';
+import Signup from '../images/Signup.png';
 
 function Register() {
   const [show, setShow] = useState(false);

@@ -199,10 +199,10 @@ async function map(companyName) {
                     xlsx.utils.book_append_sheet(wb, OverallRatings, 'Overall Ratings');
   
                     const excelData = xlsx.write(wb, {bookType:'xlsx', type:'buffer' });
-                    fs.writeFileSync('GoogleMap-overalldata.xlsx', excelData);
+                    //fs.writeFileSync('GoogleMap-overalldata.xlsx', excelData);
   
                     console.log('Excel file created successfully!')
-                    return "GoogleMap-overalldata.xlsx";
+                    return excelData;
   
                 } catch (e) {
                     console.error('error: ', e);
@@ -225,8 +225,13 @@ router.get('/excel', async(req, res) => {
       return res.status(400).send('Company name is required');
   }
     try{
-        const filePath = await map(companyName);
-        res.download(filePath);
+        const excelContent = await map(companyName);
+        
+        // Send the Excel file content as the response
+        res.setHeader('Content-Disposition', 'attachment; filename="GoogleMap-overalldata.xlsx"');
+        res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        
+        res.send(excelContent);
     }
     catch(error){
         console.error('Error scraping google data:', error);

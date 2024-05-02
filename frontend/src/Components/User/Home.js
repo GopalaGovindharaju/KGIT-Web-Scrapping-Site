@@ -1,7 +1,7 @@
 import React from 'react'
 import Header from '../Header'
 import { Box, VStack, Text, Image} from '@chakra-ui/react'
-import body from '../home-body.png'
+import body from '../images/home-body.png'
 
 function Home() {
   const homeContent = {

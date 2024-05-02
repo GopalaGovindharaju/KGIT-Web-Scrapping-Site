@@ -1,6 +1,6 @@
 import React from 'react'
 import { Box, Flex, HStack, Image, Spacer, Button } from '@chakra-ui/react'
-import logo from './Logo.png'
+import logo from './images/Logo.png'
 import '../App.css'
 
 

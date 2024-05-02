@@ -4,6 +4,7 @@ import Login from './Components/User/Login';
 import Home from './Components/User/Home';
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import EmailVerify from './Components/User/EmailVerify';
+import Dash from './Components/Dashboard/Dash';
 
 function App() {
   
@@ -16,6 +17,7 @@ function App() {
         <Route path='/register' element={<Register/>}></Route>
         <Route path='/login' element={<Login/>}></Route>
         <Route path='/verify_email/:token/:username' element={<EmailVerify/>}></Route>
+        <Route path='/dash' element={<Dash/>}></Route>
       </Routes>
       </BrowserRouter>
     </div>

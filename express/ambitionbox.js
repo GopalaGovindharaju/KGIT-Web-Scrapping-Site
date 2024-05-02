@@ -194,13 +194,13 @@ async function scrapeData(companyName){
     
       const excelData = xlsx.write(wb, { bookType: 'xlsx', type: 'buffer' });
     
-      fs.writeFileSync('AmbitionBox-overalldata.xlsx', excelData);
+      //fs.writeFileSync('AmbitionBox-overalldata.xlsx', excelData);
     
       console.log("Excel file created successfully!");
     
       // Close the browser
       await browser.close();
-      return "AmbitionBox-overalldata.xlsx";
+      return excelData;
       
     } catch (error) {
       console.error("An error occurred:", error);
@@ -216,11 +216,13 @@ router.get('/excel', async (req, res) => {
   }
   
     try {
-        // Call the scrapeData function
-        const filePath = await scrapeData(companyName);
+      const excelContent = await scrapeData(companyName);
         
-        // Send the Excel file as a response
-        res.download(filePath);
+      // Send the Excel file content as the response
+      res.setHeader('Content-Disposition', 'attachment; filename="AmbitionBox-overalldata.xlsx"');
+      res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+      
+      res.send(excelContent);
     } catch (error) {
         console.error('Error scraping data:', error);
         res.status(500).send('Internal Server Error');
