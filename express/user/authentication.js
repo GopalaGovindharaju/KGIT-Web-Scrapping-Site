@@ -83,10 +83,15 @@ router.post('/login', async (req, res) => {
         const isMatch = await bcrypt.compare(password, user.password);
 
         if (isMatch) {
-            return res.status(200).json({
-                username: user.username,
-                email: user.email,
-            });
+            if (user.is_active){
+                return res.status(200).json({
+                    username: user.username,
+                    email: user.email,
+                });
+            }
+            else{
+                return res.status(401).json({ error: 'Activate your account Through email!' });
+            }
         } else {
             return res.status(401).json({ error: 'Invalid email or password' });
         }
@@ -104,7 +109,7 @@ router.post('/google', async (req, res) => {
     if (existingUser) {
         return res.status(200).json({ message: "User Found" });
     } else {
-        const newUser = new SignUpTable({ email, username });
+        const newUser = new User({ email, username });
         await newUser.save();
         return res.status(200).json({ message: "User Created" });
     }

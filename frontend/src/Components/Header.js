@@ -2,6 +2,7 @@ import React from 'react'
 import { Box, Flex, HStack, Image, Spacer, Button } from '@chakra-ui/react'
 import logo from './images/Logo.png'
 import '../App.css'
+import { useNavigate } from 'react-router-dom';
 
 
 function Header() {
@@ -11,6 +12,7 @@ function Header() {
     color: "rgb(51, 51, 51)",
     fontSize: "18px",
   };
+  const navigate = useNavigate();
 
   return (
     <>
@@ -24,7 +26,8 @@ function Header() {
           <HStack spacing={16} justifyContent='right' mr={10} w='100%' minW='100px'>
             <Box style={nav_css} className='navhover'>SOCIAL INSIGHT</Box>
             <Box style={nav_css} className='navhover'>FEATURES</Box>
-            <Button colorScheme='teal' variant='outline' size='md'>Login</Button>
+            <Button colorScheme='teal' variant='outline' size='md' onClick={(e) => navigate('/login')}>Login</Button>
+            <Button colorScheme='teal' variant='outline' size='md' onClick={(e) => navigate('/register')}>Register</Button>
           </HStack>
         </Box>
         </Box>

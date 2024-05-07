@@ -3,6 +3,7 @@ import xlsx from 'xlsx'
 import fs from 'fs'
 import puppeteer from 'puppeteer-extra';
 import StealthPlugin from 'puppeteer-extra-plugin-stealth';
+import GoogleMap from './googlemap/google.model.js';
 
 const router = express.Router()
 
@@ -189,9 +190,9 @@ async function map(companyName) {
                     console.log(reviews);
 
                     const googleData = {
-                      "Reviews": reviews,
-                      "Ratings": ratings_data,
-                    }
+                        "Reviews": reviews,
+                        "Ratings": ratings_data
+                    } 
   
                     console.log('done:', googleData);
   
@@ -224,8 +225,8 @@ async function map(companyName) {
     }
   }
 
-router.get('/excel', async(req, res) => {
-    const companyName = req.query.companyName;
+router.post('/excel', async(req, res) => {
+  const { companyName, email, date_time } = req.body;
     if (!companyName) {
       return res.status(400).send('Company name is required');
   }
@@ -235,8 +236,19 @@ router.get('/excel', async(req, res) => {
         // Send the Excel file content as the response
         //res.setHeader('Content-Disposition', 'attachment; filename="GoogleMap-overalldata.xlsx"');
         //res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        const googleMap = new GoogleMap({
+          companyName,
+          email,
+          date_time,
+          data: excelContent, // Store the excelContent data in the collection
+      });
+  
+        // Save the data to the MongoDB collection
+        const savedData = await googleMap.save();
+
+
         
-        res.send(excelContent);
+        res.send(savedData);
     }
     catch(error){
         console.error('Error scraping google data:', error);

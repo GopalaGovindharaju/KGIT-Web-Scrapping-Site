@@ -1,9 +1,7 @@
 import express from 'express';
-import xlsx from 'xlsx'
-import fs from 'fs'
 import puppeteer from 'puppeteer-extra';
 import StealthPlugin from 'puppeteer-extra-plugin-stealth';
-import User from './user/models/user.model.js';
+import AmbitionBox from './ambition/ambition.model.js';
 puppeteer.use(StealthPlugin());
 const router = express.Router()
 
@@ -181,9 +179,9 @@ async function scrapeData(companyName){
       const employeeReviewsData = await scrapeEmployeeReviews(companyName);
       const yearTrendRatingsData = await scrapeYearTrendRatings(companyName);
       const data = {
-        "overallRatingsData": overallRatingsData,
-        "employeeReviewsData": employeeReviewsData,
-        "yearTrendRatingsData": yearTrendRatingsData,
+          "overallRatingsData": overallRatingsData,
+          "employeeReviewsData": employeeReviewsData,
+          "yearTrendRatingsData": yearTrendRatingsData,
       }
       console.log("data are: ",data);
     
@@ -215,8 +213,9 @@ async function scrapeData(companyName){
   }
 
   
-router.get('/excel', async (req, res) => {
-    const companyName = req.query.companyName;
+router.post('/excel', async (req, res) => {
+  const { companyName, email, date_time } = req.body;
+    
   
     if (!companyName) {
       return res.status(400).send('Company name is required');
@@ -228,7 +227,18 @@ router.get('/excel', async (req, res) => {
       // Send the Excel file content as the response
       //res.setHeader('Content-Disposition', 'attachment; filename="AmbitionBox-overalldata.xlsx"');
       //res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
-      res.send(excelContent);
+      // Create a new instance of the model and set the data
+      const ambitionBox = new AmbitionBox({
+        companyName,
+        email,
+        date_time,
+        data: excelContent, // Store the excelContent data in the collection
+    });
+
+      // Save the data to the MongoDB collection
+      const savedData = await ambitionBox.save();
+
+      res.send(savedData);
     } catch (error) {
         console.error('Error scraping data:', error);
         res.status(500).send('Internal Server Error');

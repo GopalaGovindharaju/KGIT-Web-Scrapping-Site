@@ -30,8 +30,10 @@ function Login() {
     axios.post('http://localhost:3001/api/google/', data)
     .then((response) => {
       console.log(response.data)
+      const userString = JSON.stringify(response.data);
+      sessionStorage.setItem('user', userString);
       setUser(data);
-      navigate('/home');
+      navigate('/dash');
     })
     .catch((error) => {
       console.log(error)
@@ -73,10 +75,11 @@ function Login() {
       }
       else{
         console.log(response.data);
-        setUser(response.data);
+        const userString = JSON.stringify(response.data);
+        sessionStorage.setItem('user', userString);
         setNewUserEmail('');
         setNewPassword('');
-        navigate('/home');
+        navigate('/dash');
       }
     })
     .catch((error) => {

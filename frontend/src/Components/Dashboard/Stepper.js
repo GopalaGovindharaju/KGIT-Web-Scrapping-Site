@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { ChakraProvider, Box, Button, FormLabel, Input, FormControl, Text, VStack, HStack, CircularProgress, CircularProgressLabel, SkeletonText, Spinner } from '@chakra-ui/react'; // Import ChakraProvider, Box, and Button
 import { Stepper, Step, StepIndicator, StepStatus, StepIcon, StepNumber, StepTitle, StepDescription, StepSeparator } from '@chakra-ui/react'; 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -6,6 +6,8 @@ import { faUser } from '@fortawesome/free-solid-svg-icons';
 import axios from 'axios';
 import { CheckCircleIcon } from '@chakra-ui/icons'
 import { motion } from 'framer-motion';
+import { useUser } from '../../context/userContext';
+import { useNavigate } from 'react-router-dom';
 
 const homeContent = {
   fontFamily:'Cambria',
@@ -57,12 +59,44 @@ function Stepperui() {
   const [googleMapProgress, setGoogleMapProgress] = useState(false);
   const [ambitionBoxProgress, setAmbitionBoxProgress] = useState(false);
   const [glassDoorProgress, setGlassDoorProgress] = useState(false);
+
+  const userString = sessionStorage.getItem('user');
+  const user = JSON.parse(userString);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    console.log(user.email);
+    if(!user.email){
+      navigate('/')
+    }
+  },[])
   
   
 
   const handleCompanyName = (e) => {
     setCompanyName(e.target.value)
   }
+
+  async function getCurrentDateTime() {
+    // Create a new Date object to get the current date and time
+    const now = new Date();
+
+    // Define options for formatting the date and time
+    const options = {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: true,
+    };
+
+    // Format the date and time using toLocaleString with specified options
+    const formattedDateTime = now.toLocaleString('en-GB', options);
+
+    // Return the formatted date and time
+    return formattedDateTime;
+}
 
   const steps = [
     { title: 'First', description: 'Stock Info' },
@@ -78,9 +112,15 @@ function Stepperui() {
     setActiveStep(prevStep => prevStep + 1);
   };
 
-  const handleExecution = () => {
-
-    axios.get(`http://localhost:3001/google/excel?companyName=${companyName}`)
+  const handleExecution = async () => {
+    setGoogleMapProgress(false);
+    setAmbitionBoxProgress(false);
+    const data = {
+      "companyName": companyName,
+      "email": user.email,
+      "date_time": await getCurrentDateTime(),
+    }
+    axios.post('http://localhost:3001/google/excel/', data)
     .then((response) => {
       console.log(response.data)
       setGoogleMapProgress(true);
@@ -88,7 +128,7 @@ function Stepperui() {
     .catch((error) => {
       console.log(error);
     })
-    axios.get(`http://localhost:3001/ambition/excel?companyName=${companyName}`)
+    axios.post('http://localhost:3001/ambition/excel/', data)
     .then((response) => {
       console.log(response.data)
       setAmbitionBoxProgress(true);
