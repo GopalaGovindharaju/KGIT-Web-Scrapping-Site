@@ -24,12 +24,7 @@ def scrap(request):
             
             response = requests.get(url)
             if response.status_code == 200:
-                file_path = os.path.join("./scrapping/Excels", f"{companyName}_{scrapname}-overalldata.xlsx")
-                
-                with open(file_path, 'wb') as file:
-                    file.write(response.content)
-
-                return Response({'message': f'Excel file saved at {file_path}'}, status=status.HTTP_200_OK)
+                return Response({'message': response.json()}, status=status.HTTP_200_OK)
             else:
                 return Response({'error': f"Unable to fetch data from the server. Status code: {response.status_code}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         except requests.exceptions.RequestException as e:

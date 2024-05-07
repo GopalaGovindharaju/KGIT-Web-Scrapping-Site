@@ -3,6 +3,7 @@ import xlsx from 'xlsx'
 import fs from 'fs'
 import puppeteer from 'puppeteer-extra';
 import StealthPlugin from 'puppeteer-extra-plugin-stealth';
+import User from './user/models/user.model.js';
 puppeteer.use(StealthPlugin());
 const router = express.Router()
 
@@ -179,8 +180,14 @@ async function scrapeData(companyName){
       const overallRatingsData = await scrapeOverallRatings(companyName);
       const employeeReviewsData = await scrapeEmployeeReviews(companyName);
       const yearTrendRatingsData = await scrapeYearTrendRatings(companyName);
+      const data = {
+        "overallRatingsData": overallRatingsData,
+        "employeeReviewsData": employeeReviewsData,
+        "yearTrendRatingsData": yearTrendRatingsData,
+      }
+      console.log("data are: ",data);
     
-      // Write data to Excel
+      /* Write data to Excel
       const wb = xlsx.utils.book_new();
     
       const overallRatingsSheet = xlsx.utils.json_to_sheet(overallRatingsData);
@@ -196,11 +203,11 @@ async function scrapeData(companyName){
     
       //fs.writeFileSync('AmbitionBox-overalldata.xlsx', excelData);
     
-      console.log("Excel file created successfully!");
+      console.log("Excel file created successfully!");*/
     
       // Close the browser
       await browser.close();
-      return excelData;
+      return data;
       
     } catch (error) {
       console.error("An error occurred:", error);
@@ -219,9 +226,8 @@ router.get('/excel', async (req, res) => {
       const excelContent = await scrapeData(companyName);
         
       // Send the Excel file content as the response
-      res.setHeader('Content-Disposition', 'attachment; filename="AmbitionBox-overalldata.xlsx"');
-      res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-      
+      //res.setHeader('Content-Disposition', 'attachment; filename="AmbitionBox-overalldata.xlsx"');
+      //res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
       res.send(excelContent);
     } catch (error) {
         console.error('Error scraping data:', error);

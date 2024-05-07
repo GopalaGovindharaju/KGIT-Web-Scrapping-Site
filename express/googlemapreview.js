@@ -187,10 +187,15 @@ async function map(companyName) {
                     }));
   
                     console.log(reviews);
+
+                    const googleData = {
+                      "Reviews": reviews,
+                      "Ratings": ratings_data,
+                    }
   
-                    console.log('done');
+                    console.log('done:', googleData);
   
-                    const wb = xlsx.utils.book_new();
+                    /*const wb = xlsx.utils.book_new();
   
                     const companyReview = xlsx.utils.json_to_sheet(reviews);
                     xlsx.utils.book_append_sheet(wb, companyReview, 'Reviews');
@@ -201,8 +206,8 @@ async function map(companyName) {
                     const excelData = xlsx.write(wb, {bookType:'xlsx', type:'buffer' });
                     //fs.writeFileSync('GoogleMap-overalldata.xlsx', excelData);
   
-                    console.log('Excel file created successfully!')
-                    return excelData;
+                    console.log('Excel file created successfully!')*/
+                    return googleData;
   
                 } catch (e) {
                     console.error('error: ', e);
@@ -228,8 +233,8 @@ router.get('/excel', async(req, res) => {
         const excelContent = await map(companyName);
         
         // Send the Excel file content as the response
-        res.setHeader('Content-Disposition', 'attachment; filename="GoogleMap-overalldata.xlsx"');
-        res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        //res.setHeader('Content-Disposition', 'attachment; filename="GoogleMap-overalldata.xlsx"');
+        //res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
         
         res.send(excelContent);
     }

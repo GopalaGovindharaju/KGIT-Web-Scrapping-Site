@@ -27,7 +27,7 @@ function Login() {
       email: detail.email
     }
     console.log(data);
-    axios.post('http://127.0.0.1:8000/api/google/', data)
+    axios.post('http://localhost:3001/api/google/', data)
     .then((response) => {
       console.log(response.data)
       setUser(data);
@@ -65,7 +65,7 @@ function Login() {
       email: newUserEmail,
       password: newPassword
     }
-    axios.post('http://127.0.0.1:8000/api/login/', data)
+    axios.post('http://localhost:3001/api/login/', data)
     .then((response) => {
       console.log(response.data)
       if (!response.data){

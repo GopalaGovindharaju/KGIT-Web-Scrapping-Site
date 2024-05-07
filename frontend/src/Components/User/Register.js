@@ -49,8 +49,8 @@ function Register() {
         username: newUserName,
         password: newPassword,
       }
-
-      axios.post('http://127.0.0.1:8000/api/signup/', data)
+      console.log(data);
+      axios.post('http://localhost:3001/api/signup/', data)
       .then((response) => {
         console.log("SignUped!")
         console.log(response.data);

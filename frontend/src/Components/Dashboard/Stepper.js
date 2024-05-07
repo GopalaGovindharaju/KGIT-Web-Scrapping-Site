@@ -79,18 +79,8 @@ function Stepperui() {
   };
 
   const handleExecution = () => {
-    // Define data objects for each request
-    const dataGoogle = {
-      companyname: companyName,
-      scrap: "google",
-    };
-  
-    const dataAmbitionBox = {
-      companyname: companyName,
-      scrap: "ambitionbox",
-    };
 
-    axios.post('http://127.0.0.1:8000/scrap/', dataGoogle)
+    axios.get(`http://localhost:3001/google/excel?companyName=${companyName}`)
     .then((response) => {
       console.log(response.data)
       setGoogleMapProgress(true);
@@ -98,7 +88,7 @@ function Stepperui() {
     .catch((error) => {
       console.log(error);
     })
-    axios.post('http://127.0.0.1:8000/scrap/', dataAmbitionBox)
+    axios.get(`http://localhost:3001/ambition/excel?companyName=${companyName}`)
     .then((response) => {
       console.log(response.data)
       setAmbitionBoxProgress(true);

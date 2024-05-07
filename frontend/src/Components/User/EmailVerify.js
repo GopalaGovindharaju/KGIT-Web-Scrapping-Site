@@ -12,7 +12,7 @@ function EmailVerify() {
             token: token
           }
     
-          axios.post('http://127.0.0.1:8000/api/emailVerify/', data)
+          axios.post('http://localhost:3001/api/emailVerify/', data)
           .then((response) => {
             console.log(response.data);
           })
