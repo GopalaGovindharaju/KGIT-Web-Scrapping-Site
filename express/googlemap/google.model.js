@@ -6,6 +6,7 @@ const googleMapSchema = new Schema({
     email: {
         type: String,
         required: true,
+        unique: false,
         match: [/.+\@.+\..+/, 'Please enter a valid email address'],
     },
     date_time: String,

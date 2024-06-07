@@ -107,11 +107,13 @@ router.post('/google', async (req, res) => {
     const existingUser = await User.findOne({ email });
 
     if (existingUser) {
-        return res.status(200).json({ message: "User Found" });
+      return res.status(200).json({ username: username, email: email });
     } else {
-        const newUser = new User({ email, username });
-        await newUser.save();
-        return res.status(200).json({ message: "User Created" });
+      const newUser = new User({ email, username });
+      await newUser.save();
+      return res
+        .status(200)
+        .json({ username: username, email: email });
     }
 });
 

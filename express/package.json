@@ -16,6 +16,7 @@
     "cors": "^2.8.5",
     "express": "^4.19.2",
     "fs": "^0.0.1-security",
+    "mongodb": "^6.7.0",
     "mongoose": "^8.3.4",
     "nodemailer": "^6.9.13",
     "puppeteer": "^22.7.0",

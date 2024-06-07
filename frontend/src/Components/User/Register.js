@@ -73,7 +73,7 @@ function Register() {
     <>
       <Flex justifyContent="center">
         <Box w='65%' p='2%'><Image src={Signup} w='100%' /></Box>
-        <Box w="50%" m="5%" h="calc(100vh - 20vh)" boxShadow="1px 1px 2px 2px #004aad" borderRadius="8px" pl="2%" pr='2%' pt='10px'>
+        <Box w="50%" m="5%" h="calc(100vh - 30vh)" boxShadow="1px 1px 2px 2px #004aad" borderRadius="8px" pl="2%" pr='2%' pt='10px'>
           <Text fontFamily='sans-serif' fontWeight='600' textAlign='center' fontSize='20px'>SIGNUP</Text>
           <form onSubmit={handleSubmit}>
             <FormControl isRequired mb="10px">
@@ -122,7 +122,7 @@ function Register() {
           </form>
           <hr></hr>
 
-          <Text textAlign='center' style={text_css}>Continue SignUp with</Text>
+          {/* <Text textAlign='center' style={text_css}>Continue SignUp with</Text>
           <Box
               mt='10px'
               display='flex'
@@ -137,7 +137,7 @@ function Register() {
                 <FontAwesomeIcon icon={faLinkedin} size='2x'/>
               </Tooltip>
             </Box>
-          <hr></hr>
+          <hr></hr>*/}
           <Text textAlign='center' style={text_css}>Already Have an account? <Link to='/login' className='navhover'>Login <FontAwesomeIcon icon={faArrowRight} /></Link></Text>
         </Box>
       </Flex>
